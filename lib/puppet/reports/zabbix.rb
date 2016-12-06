@@ -20,7 +20,11 @@ Puppet::Reports.register_report(:zabbix) do
     raise_error = false
     zabbix_hosts.each do |zhost|
       port = zhost['port'] || default_zabbix_port
-      zabbix_sender = Puppet::Util::Zabbix::Sender.new zhost['address'], port
+      tls_connect   = zhost['tls_connect']   || false
+      tls_ca_file   = zhost['tls_ca_file']   || ''
+      tls_cert_file = zhost['tls_cert_file'] || ''
+      tls_key_file  = zhost['tls_key_file']  || ''
+      zabbix_sender = Puppet::Util::Zabbix::Sender.new zhost['address'], port, tls_connect, tls_ca_file, tls_cert_file, tls_key_file
 
       # simple info
       zabbix_sender.add_item "puppet.version", self.puppet_version
